@@ -4,6 +4,8 @@ using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Xunit;
 using Microsoft.AspNetCore.Mvc;
+using PersonalPhotos.Models;
+using System.Threading.Tasks;
 
 namespace PersonalPhotos.Test
 {
@@ -26,6 +28,17 @@ namespace PersonalPhotos.Test
         {
             var result = (_controller.Index() as ViewResult);
             Assert.NotNull(result);
+            Assert.Equal("Login", result.ViewName, ignoreCase: true);
+        }
+
+        [Fact]
+        public async Task Login_GivenModelStateIsInvalid_ReturnLoginView()
+        {
+            // Invalidando meu model state
+            _controller.ModelState.AddModelError("Test", "Test");
+
+            // Mockando um view model para acessar o método de login
+            var result = await _controller.Login(Mock.Of<LoginViewModel>()) as ViewResult;
             Assert.Equal("Login", result.ViewName, ignoreCase: true);
         }
     }

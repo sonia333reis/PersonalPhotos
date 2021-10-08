@@ -44,5 +44,17 @@ namespace PersonalPhotos.Test
             Assert.Equal("Display", result.ActionName, ignoreCase: true);
         }
 
+        [Fact]
+        public void Display_GivenEmptySession_ReturnsNull()
+        {
+            var session = Mock.Of<ISession>();
+            var context = Mock.Of<HttpContext>(x => x.Session == session);
+            var acessor = Mock.Of<IHttpContextAccessor>(x => x.HttpContext == context);
+            var controller = new PhotosController(keyGen, acessor, photoMetaData, fileStore);
+
+            var result = controller.Display() as RedirectToActionResult;
+
+            Assert.Null(result);
+        }
     }
 }

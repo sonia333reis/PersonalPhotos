@@ -55,6 +55,18 @@ namespace PersonalPhotos.Test
             _logins.Setup(x => x.GetUser(It.IsAny<string>())).ReturnsAsync(model);
             var result = await _controller.Login(modelView);
             Assert.IsType<RedirectToActionResult>(result);
-        } 
+        }
+
+        [Fact]
+        public async Task Login_GivenInCorrectPassword_RedirectToLogin()
+        {
+            const string pass = "123";
+            const string wrongpass = "1234";
+            var modelView = Mock.Of<LoginViewModel>(x => x.Email == "ab@com.br" && x.Password == pass);
+            var model = Mock.Of<User>(x => x.Password == wrongpass);
+            _logins.Setup(x => x.GetUser(It.IsAny<string>())).ReturnsAsync(model);
+            var result = await _controller.Login(modelView);
+            Assert.IsType<ViewResult>(result);
+        }
     }
 }
